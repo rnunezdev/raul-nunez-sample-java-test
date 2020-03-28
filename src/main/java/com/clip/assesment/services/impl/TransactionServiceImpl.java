@@ -55,7 +55,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     private TransactionDTO toDTO(Transaction entityTransaction) {
         TransactionDTO transaction = new TransactionDTO();
-        transaction.setId(entityTransaction.getId().toString());
+        transaction.setId(entityTransaction.getId());
         transaction.setUserId(entityTransaction.getUser().getId());
         transaction.setDescription(entityTransaction.getDescription());
         transaction.setAmount(entityTransaction.getAmount());

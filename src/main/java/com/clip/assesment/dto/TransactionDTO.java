@@ -1,25 +1,28 @@
 package com.clip.assesment.dto;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
+import java.util.UUID;
 
 public class TransactionDTO {
 
-    private String id;
+    private UUID id;
 
     private Long userId;
 
     private String description;
 
-    private Double amount;
+    private BigDecimal amount;
 
     private Date date;
 
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -39,12 +42,12 @@ public class TransactionDTO {
         this.description = description;
     }
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount.setScale(2, RoundingMode.HALF_EVEN);
     }
 
     public Date getDate() {

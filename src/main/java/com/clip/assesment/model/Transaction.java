@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
 
@@ -29,7 +30,7 @@ public class Transaction {
     private String description;
 
     @Column(name = "AMOUNT")
-    private Double amount;
+    private BigDecimal amount;
 
     @Column(name = "DATE")
     private Date date;
@@ -59,11 +60,11 @@ public class Transaction {
         this.description = description;
     }
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
