@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping(value = "/transaction")
 public class TransactionController extends BaseController {
@@ -26,6 +28,14 @@ public class TransactionController extends BaseController {
         logger.info("Create a new transaction");
         transactionDTO.setUserId(userId);
         return transactionService.create( transactionDTO );
+    }
+
+    @RequestMapping(value= "/{userId}/{transactionId}", method = RequestMethod.GET)
+    @Description(value = "Get the transactionId provided and check if it belongs to thee userId provided")
+    public @ResponseBody
+    TransactionDTO findTransactionByUserId(@PathVariable UUID transactionId, @PathVariable Long userId) {
+        logger.info("Find a transaction corresponding to a user");
+        return transactionService.findTransactionById(userId, transactionId);
     }
 
 

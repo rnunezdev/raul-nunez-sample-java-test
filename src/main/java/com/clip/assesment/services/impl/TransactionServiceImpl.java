@@ -5,6 +5,7 @@ import com.clip.assesment.dao.UserDao;
 import com.clip.assesment.dto.ReportLineDTO;
 import com.clip.assesment.dto.TransactionDTO;
 import com.clip.assesment.dto.TransactionSumDTO;
+import com.clip.assesment.exceptions.NotFoundException;
 import com.clip.assesment.model.Transaction;
 import com.clip.assesment.model.User;
 import com.clip.assesment.services.TransactionService;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -24,8 +26,12 @@ public class TransactionServiceImpl implements TransactionService {
 
 
     @Override
-    public TransactionDTO findTransactionById(String transactionId) {
-        return null;
+    public TransactionDTO findTransactionById(Long userId, UUID transactionId) {
+        Transaction entityTransaction = transactionDao.findById(transactionId).orElse(null);
+        if(entityTransaction == null || !entityTransaction.getUser().getId().equals(userId)){
+            throw new NotFoundException("Transaction not found");
+        }
+        return this.toDTO(entityTransaction);
     }
 
     @Override

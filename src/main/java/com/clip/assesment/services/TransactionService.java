@@ -5,10 +5,11 @@ import com.clip.assesment.dto.TransactionDTO;
 import com.clip.assesment.dto.TransactionSumDTO;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface TransactionService {
 
-    TransactionDTO findTransactionById(String transactionId);
+    TransactionDTO findTransactionById(Long userId, UUID transactionId);
 
     List<TransactionDTO>  findAllTransactionsByUserId(Long userId);
 
