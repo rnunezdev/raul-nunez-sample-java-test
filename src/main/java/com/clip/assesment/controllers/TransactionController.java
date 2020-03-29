@@ -2,6 +2,7 @@ package com.clip.assesment.controllers;
 
 
 import com.clip.assesment.dto.TransactionDTO;
+import com.clip.assesment.dto.TransactionSumDTO;
 import com.clip.assesment.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
@@ -45,6 +46,14 @@ public class TransactionController extends BaseController {
     List<TransactionDTO> findAllTransactionByUserId(@PathVariable Long userId) {
         logger.info("Find all transactions corresponding to a user ordered by date");
         return transactionService.findAllTransactionsByUserId(userId);
+    }
+
+    @RequestMapping(value= "/{userId}/sum", method = RequestMethod.GET)
+    @Description(value = "Summarize all the transactions associated to a userId")
+    public @ResponseBody
+    TransactionSumDTO sumAllTransactionByUserId(@PathVariable Long userId) {
+        logger.info("Summarize all transactions corresponding to a user");
+        return transactionService.summarizeTransactions(userId);
     }
 
 

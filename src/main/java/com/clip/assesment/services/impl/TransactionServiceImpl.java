@@ -12,6 +12,7 @@ import com.clip.assesment.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -54,7 +55,17 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public TransactionSumDTO summarizeTransactions(Long userId) {
-        return null;
+        TransactionSumDTO dto = new TransactionSumDTO();
+        User user = userDao.findById(userId).orElse(null);
+        if (user != null) {
+            BigDecimal sum = transactionDao.findAllByUser(user).stream().
+                    map(tx -> tx.getAmount()).
+                    reduce(BigDecimal.ZERO, BigDecimal::add);
+            dto.setSum(sum);
+        }
+        dto.setUserId(userId);
+
+        return dto;
     }
 
     @Override
