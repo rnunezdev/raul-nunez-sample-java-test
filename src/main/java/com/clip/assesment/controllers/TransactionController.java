@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -36,6 +37,14 @@ public class TransactionController extends BaseController {
     TransactionDTO findTransactionByUserId(@PathVariable UUID transactionId, @PathVariable Long userId) {
         logger.info("Find a transaction corresponding to a user");
         return transactionService.findTransactionById(userId, transactionId);
+    }
+
+    @RequestMapping(value= "/{userId}/all", method = RequestMethod.GET)
+    @Description(value = "Get all the transactions associated to a userId ordered by date")
+    public @ResponseBody
+    List<TransactionDTO> findAllTransactionByUserId(@PathVariable Long userId) {
+        logger.info("Find all transactions corresponding to a user ordered by date");
+        return transactionService.findAllTransactionsByUserId(userId);
     }
 
 

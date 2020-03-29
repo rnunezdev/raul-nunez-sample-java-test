@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface TransactionDao extends JpaRepository<Transaction, UUID> {
-    List<Transaction> findAllByUser(User user);
+
+    List<Transaction> findAllByUserOrderByDate(User user);
 
 }

@@ -12,8 +12,10 @@ import com.clip.assesment.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -36,7 +38,13 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public List<TransactionDTO> findAllTransactionsByUserId(Long userId) {
-        return null;
+        List<TransactionDTO> transactionList = new ArrayList<>();
+        User user = userDao.findById(userId).orElse(null);
+        if (user != null) {
+            transactionList = transactionDao.findAllByUserOrderByDate(user).stream().map(tx -> this.toDTO(tx)).collect(Collectors.toList());
+        }
+
+        return transactionList;
     }
 
     @Override
@@ -61,7 +69,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     private TransactionDTO toDTO(Transaction entityTransaction) {
         TransactionDTO transaction = new TransactionDTO();
-        transaction.setId(entityTransaction.getId());
+        transaction.setTransactionId(entityTransaction.getId());
         transaction.setUserId(entityTransaction.getUser().getId());
         transaction.setDescription(entityTransaction.getDescription());
         transaction.setAmount(entityTransaction.getAmount());
