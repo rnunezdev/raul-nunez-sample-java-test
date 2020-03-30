@@ -1,6 +1,7 @@
 package com.clip.assesment.controllers;
 
 
+import com.clip.assesment.dto.ReportLineDTO;
 import com.clip.assesment.dto.TransactionDTO;
 import com.clip.assesment.dto.TransactionSumDTO;
 import com.clip.assesment.services.TransactionService;
@@ -54,6 +55,14 @@ public class TransactionController extends BaseController {
     TransactionSumDTO sumAllTransactionByUserId(@PathVariable Long userId) {
         logger.info("Summarize all transactions corresponding to a user");
         return transactionService.summarizeTransactions(userId);
+    }
+
+    @RequestMapping(value= "/{userId}/weekly", method = RequestMethod.GET)
+    @Description(value = "Summarize all the transactions associated to a userId")
+    public @ResponseBody
+    List<ReportLineDTO> getWeeklyTransactionReportByUserId(@PathVariable Long userId) {
+        logger.info("Get a weekly report of all transactions corresponding to a user");
+        return transactionService.generateWeeklyTransactionReportByUserId(userId);
     }
 
 

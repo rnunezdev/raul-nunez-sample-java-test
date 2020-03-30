@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
@@ -24,15 +25,18 @@ public class Transaction {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "USER_ID")
+    @NotNull
     private  User user;
 
     @Column(name = "DESCRIPTION")
     private String description;
 
     @Column(name = "AMOUNT")
+    @NotNull
     private BigDecimal amount;
 
     @Column(name = "DATE")
+    @NotNull
     private Date date;
 
 

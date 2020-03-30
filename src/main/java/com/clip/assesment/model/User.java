@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "USER")
@@ -17,9 +18,11 @@ public class User {
     private Long id;
 
     @Column(name = "LAST_NAME")
+    @NotNull
     private String lastName;
 
     @Column(name = "NAME")
+    @NotNull
     private String name;
 
     @Column(name = "EMAIL")
