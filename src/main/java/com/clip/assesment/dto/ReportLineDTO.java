@@ -14,6 +14,8 @@ public class ReportLineDTO {
 
     private BigDecimal amount;
 
+    private BigDecimal totalAmount;
+
     public Long getUserId() {
         return userId;
     }
@@ -52,5 +54,13 @@ public class ReportLineDTO {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
     }
 }

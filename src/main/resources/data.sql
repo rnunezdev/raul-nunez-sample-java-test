@@ -69,5 +69,11 @@ values (1, 40.56, 'Description 1', '2020-02-15'),
         (2, 16.12, 'Description extended report 40', '2020-02-28'),
         (2, 45.65, 'Description extended report 41', '2020-02-29'),
         (2, 45.65, 'Description extended report 41', '2020-03-01'),
-        (2, 45.65, 'Description extended report 41', '2020-03-02');
+        (2, 45.65, 'Description extended report 41', '2020-03-02'),
+
+        (2, 45.65, 'Description extended report 42', '2020-03-30'),
+
+        (2, 45.65, 'Description extended report 42', '2019-11-01'),
+
+        (2, 45.65, 'Description extended report 42', '2019-11-08');
 
