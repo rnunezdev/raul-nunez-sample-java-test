@@ -11,6 +11,8 @@ import com.clip.assesment.exceptions.NotFoundException;
 import com.clip.assesment.model.Transaction;
 import com.clip.assesment.model.User;
 import com.clip.assesment.services.TransactionService;
+import com.clip.assesment.utils.CustomWeekFinishTemporalAdjuster;
+import com.clip.assesment.utils.CustomWeeklyTemporalAdjuster;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -89,11 +91,12 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<ReportLineDTO> generateWeeklyTransactionReportByUserId(Long userId) {
-        WeekFields week = WeekFields.of(DayOfWeek.FRIDAY, 1);
+    public List<ReportLineDTO> generateWeeklyTransactionReportByUserId(Long userId) { WeekFields week = WeekFields.of(DayOfWeek.FRIDAY, 1);
+        CustomWeeklyTemporalAdjuster temporalAdjuster = new CustomWeeklyTemporalAdjuster();
+        CustomWeekFinishTemporalAdjuster customWeekFinishTemporalAdjuster = new CustomWeekFinishTemporalAdjuster();
         User user = userDao.findById(userId).orElse(null);
         List<ReportLineDTO> result = transactionDao.findAllByUserOrderByDate(user).stream()
-                .collect(Collectors.groupingBy( item -> this.convertToLocalDate(item.getDate()).with(TemporalAdjusters.previousOrSame(DayOfWeek.of(5))) )) // Group by Week Fri to Thu
+                .collect(Collectors.groupingBy( item -> this.convertToLocalDate(item.getDate()).with(temporalAdjuster) ))
                 .entrySet().stream() // Second stream for ordering the Map
                 .collect(Collectors.toMap(Map.Entry::getKey,
                                           Map.Entry::getValue,
@@ -102,13 +105,20 @@ public class TransactionServiceImpl implements TransactionService {
                 ).entrySet().stream()
                 .map(entry -> {
                     ReportLineDTO line = new ReportLineDTO();
+                    LocalDate endDate = entry.getKey().with(customWeekFinishTemporalAdjuster);
                     line.setUserId(userId);
                     line.setWeekStart(entry.getKey().toString() + " " + entry.getKey().getDayOfWeek());
-                    line.setAmount(entry.getValue().stream().map(Transaction::getAmount).reduce(new BigDecimal('0'), BigDecimal::add));
+                    line.setAmount(entry.getValue().stream().map(Transaction::getAmount).reduce(new BigDecimal("0"), BigDecimal::add));
                     line.setQuantity(entry.getValue().size());
-                    line.setWeekEnd("");
+                    line.setWeekEnd(endDate.toString() + " " + endDate.getDayOfWeek());
                     return line;
                 }).collect(Collectors.toList());
+
+        BigDecimal counter = new BigDecimal("0");
+        for (ReportLineDTO item : result) {
+            item.setTotalAmount(counter);
+            counter = counter.add(item.getAmount());
+        }
 
         return result;
     }
