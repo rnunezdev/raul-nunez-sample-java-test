@@ -1,7 +1,6 @@
 package com.clip.assesment.services.impl;
 
 import ch.qos.logback.classic.Logger;
-import com.clip.assesment.controllers.BaseController;
 import com.clip.assesment.dao.TransactionDao;
 import com.clip.assesment.dao.UserDao;
 import com.clip.assesment.dto.ReportLineDTO;
@@ -13,29 +12,29 @@ import com.clip.assesment.model.User;
 import com.clip.assesment.services.TransactionService;
 import com.clip.assesment.utils.CustomWeekFinishTemporalAdjuster;
 import com.clip.assesment.utils.CustomWeeklyTemporalAdjuster;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.SortedMap;
+import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.UUID;
 import java.util.Date;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class TransactionServiceImpl implements TransactionService {
 
     protected Logger logger = (Logger) LoggerFactory.getLogger(TransactionServiceImpl.class);
@@ -72,7 +71,14 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public TransactionDTO create(TransactionDTO transaction) {
         User user = userDao.findById(transaction.getUserId()).orElse(null);
-        return this.toDTO(transactionDao.save(this.toEntity(user, transaction)));
+        Transaction entityTransaction;
+        try {
+            entityTransaction = this.toEntity(user, transaction);
+        } catch (ParseException ex) {
+            logger.error("Error parsing date while creating a transaction: " + transaction.getDate());
+            throw new RuntimeException("Error parsing date while creating a transaction");
+        }
+        return this.toDTO(transactionDao.save(entityTransaction));
     }
 
     @Override
@@ -108,13 +114,13 @@ public class TransactionServiceImpl implements TransactionService {
                     LocalDate endDate = entry.getKey().with(customWeekFinishTemporalAdjuster);
                     line.setUserId(userId);
                     line.setWeekStart(entry.getKey().toString() + " " + entry.getKey().getDayOfWeek());
-                    line.setAmount(entry.getValue().stream().map(Transaction::getAmount).reduce(new BigDecimal("0"), BigDecimal::add));
+                    line.setAmount(entry.getValue().stream().map(Transaction::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add));
                     line.setQuantity(entry.getValue().size());
                     line.setWeekEnd(endDate.toString() + " " + endDate.getDayOfWeek());
                     return line;
                 }).collect(Collectors.toList());
 
-        BigDecimal counter = new BigDecimal("0");
+        BigDecimal counter = BigDecimal.ZERO;
         for (ReportLineDTO item : result) {
             item.setTotalAmount(counter);
             counter = counter.add(item.getAmount());
@@ -134,17 +140,17 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setUserId(entityTransaction.getUser().getId());
         transaction.setDescription(entityTransaction.getDescription());
         transaction.setAmount(entityTransaction.getAmount());
-        transaction.setDate(entityTransaction.getDate());
+        transaction.setDate(entityTransaction.getDate(), TimeZone.getDefault().getID());
         return transaction;
     }
 
-    private Transaction toEntity(User user, TransactionDTO transaction) {
+    private Transaction toEntity(User user, TransactionDTO transaction) throws ParseException {
         Transaction entityTransaction = new Transaction();
 
         entityTransaction.setUser(user);
         entityTransaction.setDescription(transaction.getDescription());
         entityTransaction.setAmount(transaction.getAmount());
-        entityTransaction.setDate(transaction.getDate());
+        entityTransaction.setDate(transaction.getDateConverted(TimeZone.getDefault().getID()));
         return entityTransaction;
     }
 

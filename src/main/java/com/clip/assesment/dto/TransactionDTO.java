@@ -2,10 +2,15 @@ package com.clip.assesment.dto;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.UUID;
 
 public class TransactionDTO {
+
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     private UUID transactionId;
 
@@ -15,7 +20,7 @@ public class TransactionDTO {
 
     private BigDecimal amount;
 
-    private Date date;
+    private String date;
 
 
     public UUID getTransactionId() {
@@ -50,11 +55,17 @@ public class TransactionDTO {
         this.amount = amount.setScale(2, RoundingMode.HALF_EVEN);
     }
 
-    public Date getDate() {
-        return date;
+    public Date getDateConverted(String timeZone) throws ParseException {
+        dateFormat.setTimeZone(TimeZone.getTimeZone(timeZone));
+        return dateFormat.parse(this.date);
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public String getDate() {
+        return this.date;
+    }
+
+    public void setDate(Date date, String timeZone) {
+        dateFormat.setTimeZone(TimeZone.getTimeZone(timeZone));
+        this.date = dateFormat.format(date);
     }
 }
