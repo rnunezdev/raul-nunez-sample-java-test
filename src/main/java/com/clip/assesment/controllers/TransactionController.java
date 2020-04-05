@@ -49,6 +49,14 @@ public class TransactionController extends BaseController {
         return transactionService.findAllTransactionsByUserId(userId);
     }
 
+    @RequestMapping(value= "/random", method = RequestMethod.GET)
+    @Description(value = "Get a random transaction from the ones persisted in DB")
+    public @ResponseBody
+    TransactionDTO findRandomTransaction() {
+        logger.info("Find a random transaction");
+        return transactionService.findRandomTransaction();
+    }
+
     @RequestMapping(value= "/{userId}/sum", method = RequestMethod.GET)
     @Description(value = "Summarize all the transactions associated to a userId")
     public @ResponseBody

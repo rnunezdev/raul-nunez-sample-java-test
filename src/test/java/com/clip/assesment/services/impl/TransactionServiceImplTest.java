@@ -405,12 +405,68 @@ public class TransactionServiceImplTest {
         assertEquals(listReportLinesDTO.get(2).getTotalAmount(), new BigDecimal("2233.10"));
         assertEquals(listReportLinesDTO.get(2).getQuantity(), 8);
 
-
-
-
     }
 
     @Test
     void findRandomTransaction() {
+        // given
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setTimeZone(TimeZone.getDefault());
+
+        Calendar cal1 = Calendar.getInstance();
+        cal1.set(2020,Calendar.JUNE,20);
+        Date date1 = cal1.getTime();
+        Calendar cal2 = Calendar.getInstance();
+        cal2.set(2020,Calendar.NOVEMBER,20);
+        Date date2 = cal2.getTime();
+        Calendar cal3 = Calendar.getInstance();
+        cal3.set(2020,Calendar.DECEMBER,20);
+        Date date3 = cal3.getTime();
+
+        UUID uuid1 = UUID.randomUUID();
+        UUID uuid2 = UUID.randomUUID();
+        UUID uuid3 = UUID.randomUUID();
+
+        User user = new User();
+        user.setId(1L);
+
+        List<Transaction> transactionList = new ArrayList<>();
+
+        Transaction transaction1 = new Transaction();
+        transaction1.setDate(date1);
+        transaction1.setAmount(new BigDecimal("50.59"));
+        transaction1.setDescription("A description 1");
+        transaction1.setId(uuid1);
+        transaction1.setUser(user);
+
+        Transaction transaction2 = new Transaction();
+        transaction2.setDate(date2);
+        transaction2.setAmount(new BigDecimal("100.67"));
+        transaction2.setDescription("A description 2");
+        transaction2.setId(uuid2);
+        transaction2.setUser(user);
+
+        Transaction transaction3 = new Transaction();
+        transaction3.setDate(date3);
+        transaction3.setAmount(new BigDecimal("200.34"));
+        transaction3.setDescription("A description 3");
+        transaction3.setId(uuid3);
+        transaction3.setUser(user);
+
+        transactionList.add(transaction1);
+        transactionList.add(transaction2);
+        transactionList.add(transaction3);
+
+        when(transactionDao.findAll()).thenReturn(transactionList);
+
+        // when
+        TransactionDTO transactionDTO = transactionService.findRandomTransaction();
+
+        // then
+        assertTrue(transactionList.stream().anyMatch(elem -> elem.getUser().getId() == transactionDTO.getUserId()));
+        assertTrue(transactionList.stream().anyMatch(elem -> elem.getAmount() == transactionDTO.getAmount()));
+        assertTrue(transactionList.stream().anyMatch(elem -> dateFormat.format(elem.getDate()).equals(transactionDTO.getDate())));
+        assertTrue(transactionList.stream().anyMatch(elem -> elem.getDescription().equals(transactionDTO.getDescription())));
+        assertTrue(transactionList.stream().anyMatch(elem -> elem.getId().equals(transactionDTO.getTransactionId())));
     }
 }

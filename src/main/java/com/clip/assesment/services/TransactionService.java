@@ -19,6 +19,6 @@ public interface TransactionService {
 
     List<ReportLineDTO> generateWeeklyTransactionReportByUserId(Long userId);
 
-    TransactionDTO findRandomTransaction(String transactionId);
+    TransactionDTO findRandomTransaction();
 
 }

@@ -27,11 +27,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.UUID;
 import java.util.Date;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -130,8 +132,10 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public TransactionDTO findRandomTransaction(String transactionId) {
-        return null;
+    public TransactionDTO findRandomTransaction() {
+        List<Transaction> allTransactions = transactionDao.findAll();
+        Random r = new Random();
+        return toDTO(allTransactions.get(r.nextInt(allTransactions.size())));
     }
 
     private TransactionDTO toDTO(Transaction entityTransaction) {
