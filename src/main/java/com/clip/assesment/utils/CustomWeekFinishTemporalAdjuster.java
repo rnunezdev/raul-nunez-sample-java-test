@@ -14,6 +14,10 @@ public class CustomWeekFinishTemporalAdjuster implements TemporalAdjuster {
     public Temporal adjustInto(Temporal temporal) {
         Temporal newDate = temporal.with(TemporalAdjusters.next(DayOfWeek.THURSDAY));
 
+        if (temporal.get(DAY_OF_WEEK) == 4) {
+            return temporal;
+        }
+
         if (newDate.get(MONTH_OF_YEAR) != temporal.get(MONTH_OF_YEAR)) {
             return newDate.minus(newDate.get(DAY_OF_MONTH), DAYS);
         }

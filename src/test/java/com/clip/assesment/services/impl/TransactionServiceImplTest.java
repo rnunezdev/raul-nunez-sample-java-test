@@ -231,7 +231,7 @@ public class TransactionServiceImplTest {
     }
 
     @Test
-    void findAllTransactionsByUserIdUserNull() throws ParseException {
+    public void findAllTransactionsByUserIdUserNull() throws ParseException {
         // given
 
         User user = new User();
@@ -247,7 +247,7 @@ public class TransactionServiceImplTest {
     }
 
     @Test
-    void create() throws ParseException {
+    public void create() throws ParseException {
         // given
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         dateFormat.setTimeZone(TimeZone.getDefault());
@@ -287,7 +287,7 @@ public class TransactionServiceImplTest {
     }
 
     @Test
-    void summarizeTransactions() {
+    public void summarizeTransactions() {
         // given
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         dateFormat.setTimeZone(TimeZone.getDefault());
@@ -351,7 +351,7 @@ public class TransactionServiceImplTest {
     }
 
     @Test
-    void summarizeTransactionsUserNull() {
+    public void summarizeTransactionsUserNull() {
         // given
         User user = new User();
         user.setId(1L);
@@ -369,7 +369,7 @@ public class TransactionServiceImplTest {
     }
 
     @Test
-    void generateWeeklyTransactionReportByUserId() {
+    public void generateWeeklyTransactionReportByUserId() {
         // given
         User user = new User();
         user.setId(1L);
@@ -408,7 +408,7 @@ public class TransactionServiceImplTest {
     }
 
     @Test
-    void findRandomTransaction() {
+    public void findRandomTransaction() {
         // given
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         dateFormat.setTimeZone(TimeZone.getDefault());

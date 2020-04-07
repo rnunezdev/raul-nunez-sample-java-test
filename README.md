@@ -10,11 +10,11 @@ https://github.com/cesaralcancio/simple-test
 for more details.
 
 # Pre requisites 
-Please have installed on the host machine the following:
+Please have installed in the host machine the following:
 
     1. Java 1.8
-    2. Maven 3.6.1 
-    3. Git
+    2. Maven 3.6
+    3. Git 2.21
     
 Once installed you will see something similar to the following when run mvn --version command:
 
