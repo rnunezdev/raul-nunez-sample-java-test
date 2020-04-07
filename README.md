@@ -104,3 +104,7 @@ It will show a screen for entering connection parameters, please enter exactly t
     select * from TRANSACTIONS
     
 You'll see all the pre inserted data for testing purposes.
+
+Update: As a plus you can execute the last endpoint that will give you a random transaction, so please execute it more than once so you can see the transaction is different every time:
+
+    curl -X GET http://localhost:9090/transaction/random -H 'cache-control: no-cache'
